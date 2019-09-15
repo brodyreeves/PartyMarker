@@ -9,6 +9,8 @@
 
 ## SavedVariables: PartyMarkerClassicDB
 
+#@no-lib-strip@
 embeds.xml
+#@end-no-lib-strip@
 
 PartyMarker.lua
