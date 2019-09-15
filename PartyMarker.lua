@@ -26,8 +26,6 @@ PartyMarkerClassic.lootThreshOptions = {
     [2] = "Uncommon",
     [3] = "Rare",
     [4] = "Epic",
-    [5] = "Legendary",
-    [6] = "Artifact",
 }
 
 PartyMarkerClassic.options = {
@@ -51,7 +49,7 @@ PartyMarkerClassic.options = {
         },
         showMsg = {
             name = "Display messages", width = "double",
-            desc = "Display addon messages in the chat frame",
+            desc = "Display addon messages in the chat frame, because the event used fires multiple times this can clutter the chat fram when you form a group; you may want to enable this if you're having problems, as a debugging tool",
             type = "toggle", order = 2,
             get = function(info) return PartyMarkerClassic.db.profile.showMsg end,
             set = function(info, val) PartyMarkerClassic.db.profile.showMsg = val end,
@@ -125,7 +123,7 @@ PartyMarkerClassic.options = {
 PartyMarkerClassic.defaults = {
     profile = {
         enabled = true,
-        showMsg = true,
+        showMsg = false, -- primarily used for debugging
         playerIcon = 0,
         partnerIcon = 0,
         partnerBTag = "",
@@ -146,17 +144,12 @@ end
 
 function PartyMarkerClassic:OnEnable()
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-    if self.db.profile.showMsg then
-        LibStub("AceConsole-3.0"):Print(colorY .. "PartyMarkerClassic: " .. colorG .. "Enabled" .. colorW)
-     end
+    PartyMarkerClassic:Send_Message(colorG .. "Enabled" .. colorW)
 end
 
 function PartyMarkerClassic:OnDisable()
     self:UnregisterEvent("GROUP_ROSTER_UPDATE")
-    if self.db.profile.showMsg then
-        LibStub("AceConsole-3.0"):Print(colorY .. "PartyMarkerClassic: " .. colorR .. "Disabled" .. colorW)
-     end
+    PartyMarkerClassic:Send_Message(colorR .. "Disabled" .. colorW)
 end
 
 -- Event Handlers
@@ -174,29 +167,45 @@ function PartyMarkerClassic:GROUP_ROSTER_UPDATE()
             end
         end
 
+        -- marks
         if UnitInParty(partnerName) and CanBeRaidTarget(partnerName) and CanBeRaidTarget("player") then -- partner is in party, player and partner can be marked
             SetRaidTarget(partnerName, self.db.profile.partnerIcon)
             SetRaidTarget("player", self.db.profile.playerIcon) -- set symbol on player
+            PartyMarkerClassic:Send_Message(colorG .. "Marked <" .. colorW .. partnerName .. colorG .. ">")
+        else -- couldn't mark
+            PartyMarkerClassic:Send_Message(colorR .. "Failed to mark <" .. colorW .. partnerName .. colorR .. ">")
+        end
 
-            if IsPartyLeader() then -- only do loot stuff as leader
-                -- loot mode and threshold take strings as the argument, access the options table to get the string
+        -- loot
+        if UnitIsGroupLeader("player") then -- only do loot stuff as leader
+            local curMethod = GetLootMethod()
+            -- loot mode takes a string as the argument, access the options table to get the string
+            if curMethod == PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode]:lower() then -- only change if needed
+                PartyMarkerClassic:Send_Message(colorG .. "Loot method already <" .. colorW .. PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode] .. colorG .. ">")
+            else
                 if self.db.profile.lootMode == 3 then -- master loot needs a player name too
                     local playerName = UnitName("player")
                     SetLootMethod(PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode], playerName) -- set group loot method
                 else
                     SetLootMethod(PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode]) -- set group loot method
                 end
-
-                SetLootThreshold(PartyMarkerClassic.lootThreshOptions[self.db.profile.lootThresh]) -- set loot threshold
+                PartyMarkerClassic:Send_Message(colorG .. "Set loot method to <" .. colorW .. PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode] .. colorG .. ">")
             end
 
-            if self.db.profile.showMsg then
-                LibStub("AceConsole-3.0"):Print(colorY .. "PartyMarkerClassic: " .. colorG .. "Marked " .. colorW .. partnerName)
+            if GetLootThreshold() == self.db.profile.lootThresh then
+                PartyMarkerClassic:Send_Message(colorG .. "Loot threshold already <" .. colorW .. PartyMarkerClassic.lootThreshOptions[self.db.profile.lootThresh] .. colorG .. ">")
+            else
+                SetLootThreshold(self.db.profile.lootThresh) -- set loot threshold
+                PartyMarkerClassic:Send_Message(colorG .. "Set loot threshold to <" .. colorW .. PartyMarkerClassic.lootThreshOptions[self.db.profile.lootThresh] .. colorG .. ">")
             end
-        else -- couldn't mark
-            if self.db.profile.showMsg then
-                LibStub("AceConsole-3.0"):Print(colorY .. "PartyMarkerClassic: " .. colorR .. "Failed to mark " .. colorW .. partnerName)
-            end
+        else -- not party leader
+            PartyMarkerClassic:Send_Message(colorR .. "Failed to set loot method/threshold to <" .. colorW .. PartyMarkerClassic.lootModeOptions[self.db.profile.lootMode] .. ", " .. PartyMarkerClassic.lootThreshOptions[self.db.profile.lootThresh] .. colorR .. "> -- not party leader")
         end
     end
+end
+
+-- Utility
+function PartyMarkerClassic:Send_Message(msg)
+    if not self.db.profile.showMsg then return end
+    LibStub("AceConsole-3.0"):Print(colorY .. "PartyMarkerClassic: " .. colorW .. msg)
 end
