@@ -1,0 +1,14 @@
+## Interface: 11302
+## Title: Party Marker Classic
+## Version: 1.2.0
+## Notes: Marks player and a friend with raid icons
+## Author: inSpired_TV
+
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+
+## SavedVariables: PartyMarkerClassicDB
+
+embeds.xml
+
+PartyMarker.lua
