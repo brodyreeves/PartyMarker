@@ -1,25 +1,17 @@
 package-as: PartyMarkerClassic
 
 externals:
-  libs/LibStub:
-    url: https://repos.wowace.com/wow/libstub/mainline/trunk
-    tag: latest
-  libs/CallbackHandler-1.0:
-    url: https://repos.wowace.com/wow/callbackhandler/mainline/trunk/CallbackHandler-1.0
-    tag: latest
-  libs/AceAddon-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceAddon-3.0
-  libs/AceConfig-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceConfig-3.0
-  libs/AceConsole-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceConsole-3.0
-  libs/AceDB-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceDB-3.0
-  libs/AceEvent-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceEvent-3.0
-  libs/AceGUI-3.0:
-    url: https://repos.wowace.com/wow/ace3/mainline/trunk/AceGUI-3.0
+  Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
+  Libs/CallbackHandler-1.0: https://repos.wowace.com/wow/callbackhandler/trunk/CallbackHandler-1.0
+  Libs/AceAddon-3.0: https://repos.wowace.com/wow/ace3/trunk/AceAddon-3.0
+  Libs/AceConfig-3.0: https://repos.wowace.com/wow/ace3/trunk/AceConfig-3.0
+  Libs/AceConsole-3.0: https://repos.wowace.com/wow/ace3/trunk/AceConsole-3.0
+  Libs/AceDB-3.0: https://repos.wowace.com/wow/ace3/trunk/AceDB-3.0
+  Libs/AceEvent-3.0: https://repos.wowace.com/wow/ace3/trunk/AceEvent-3.0
+  Libs/AceGUI-3.0: https://repos.wowace.com/wow/ace3/trunk/AceGUI-3.0
 
 enable-nolib-creation: no
 
-manual-changelog: CHANGELOG.md
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
