@@ -1,13 +1,9 @@
 # Party Marker
 
-## v1.2.4.1c
+## v1.2.4c
 
 - Cleanup the Github-Curseforge automation files
 - Fixed supprt for 2 partners (after accidentally being cut)
-
-## v1.2.4
-
-- Just cleanup for automatic pushing
 
 ## v1.2.3
 
