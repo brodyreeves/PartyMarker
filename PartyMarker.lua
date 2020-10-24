@@ -181,14 +181,19 @@ end
 function PartyMarker:GROUP_ROSTER_UPDATE()
     if GetNumGroupMembers() == 2 then -- group valid for marking
         local partnerName = "1" -- default to illegal name
+        local partner2Name = "1"
 
         -- get partner's toon name
         local _,numOnline = BNGetNumFriends() -- number of online BNet friends
         for i = 1, numOnline do -- for each friend
-            local _,_, battleTag,_, toonName,_,client = BNGetFriendInfo( i ) -- read info
+            local _,_, battleTag,_, characterName ,_,client = BNGetFriendInfo( i ) -- read info
+
             if battleTag == self.db.profile.partnerBTag and client == "WoW" then -- partner BNet account is playing WoW
-                partnerName = toonName -- found the character name for partner account
-                break -- from loop through friends
+                partnerName = characterName  -- found the character name for partner account
+            end
+
+            if battleTag == self.db.profile.partner2BTag and client == "WoW" then -- partner BNet account is playing WoW
+                partner2Name = characterName  -- found the character name for partner account
             end
         end
 
@@ -199,6 +204,14 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
             PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partnerName .. colorG .. ">")
         else -- couldn't mark
             PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partnerName .. colorR .. ">")
+        end
+
+        if UnitInParty(partner2Name) and CanBeRaidTarget(partner2Name) and CanBeRaidTarget("player") then -- partner2 is in party, player and partner2 can be marked
+            SetRaidTarget(partner2Name, self.db.profile.partner2Icon)
+            SetRaidTarget("player", self.db.profile.playerIcon) -- set symbol on player
+            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partner2Name .. colorG .. ">")
+        else -- couldn't mark
+            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partner2Name .. colorR .. ">")
         end
 
         -- loot
