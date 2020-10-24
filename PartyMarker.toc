@@ -1,0 +1,22 @@
+#@retail@
+## Interface: 90001
+#@end-retail@
+#@non-retail@
+# ## Interface: 11305
+#@end-non-retail@
+## Title: Party Marker
+## Version: @project-version@
+## Notes: Marks player and up to 2 friends with raid icons
+## Author: inSpired_TV
+## X-Curse-Project-ID: 341686
+
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+
+## SavedVariables: PartyMarkerDB
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@
+
+PartyMarker.lua

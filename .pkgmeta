@@ -1,4 +1,4 @@
-package-as: PartyMarkerClassic
+package-as: PartyMarker
 
 externals:
     Libs/LibStub: https://repos.wowace.com/wow/libstub/trunk
@@ -17,4 +17,4 @@ manual-changelog:
     markup-type: markdown
 
 ignore:
-    - README.md
+    - Addon_Images
