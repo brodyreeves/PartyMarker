@@ -179,25 +179,16 @@ end
 
 -- Event Handlers
 function PartyMarker:GROUP_ROSTER_UPDATE()
-    if GetNumGroupMembers() == 2 or GetNumGroupMembers() == 3 and self.db.profile.partner2BTag ~= "" then -- group valid for marking
+    if GetNumGroupMembers() == 2 then -- group valid for marking
         local partnerName = "1" -- default to illegal name
-        local partner2Name = "1"
 
         -- get partner's toon name
-        local _, numOnline = BNGetNumFriends() -- number of online BNet friends
-
-        for id = 1, numOnline do -- for each friend
-            local accountInfo = C_BattleNet.GetFriendAccountInfo(id) -- read friend info
-            local battleTag = accountInfo and accountInfo.battleTag or "1"
-            local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
-            local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
-
+        local _,numOnline = BNGetNumFriends() -- number of online BNet friends
+        for i = 1, numOnline do -- for each friend
+            local _,_, battleTag,_, toonName,_,client = BNGetFriendInfo( i ) -- read info
             if battleTag == self.db.profile.partnerBTag and client == "WoW" then -- partner BNet account is playing WoW
-                partnerName = characterName -- found the character name for partner account
-            end
-
-            if battleTag == self.db.profile.partner2BTag and client == "WoW" then -- partner BNet account is playing WoW
-                partner2Name = characterName -- found the character name for partner account
+                partnerName = toonName -- found the character name for partner account
+                break -- from loop through friends
             end
         end
 
@@ -208,13 +199,6 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
             PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partnerName .. colorG .. ">")
         else -- couldn't mark
             PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partnerName .. colorR .. ">")
-        end
-
-        if UnitInParty(partner2Name) and CanBeRaidTarget(partner2Name) and CanBeRaidTarget("player") then -- partner is in party, player and partner can be marked
-            SetRaidTarget(partner2Name, self.db.profile.partner2Icon)
-            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partner2Name .. colorG .. ">")
-        else -- couldn't mark
-            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partner2Name .. colorR .. ">")
         end
 
         -- loot

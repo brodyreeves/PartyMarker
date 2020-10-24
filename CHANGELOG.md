@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.2.4.1
+
+- Cleanup the Github-Curseforge automation files
+
 ## v1.2.4
 
 - Just cleanup for automatic pushing
