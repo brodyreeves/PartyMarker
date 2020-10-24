@@ -36,6 +36,7 @@ globals = {
     "GetLootThreshold",
     "SetLootThreshold",
     "GetNumGroupMembers",
+    "BNGetFriendInfo",
 
     -- Blizz Globals
 
