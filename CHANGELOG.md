@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.2.5r
+
+- Update interface number
+
 ## v1.2.4r
 
 - Just cleanup for automatic pushing
