@@ -1,9 +1,4 @@
-#@retail@
-## Interface: 90001
-#@end-retail@
-#@non-retail@
-# ## Interface: 11305
-#@end-non-retail@
+## Interface: 11305
 ## Title: Party Marker
 ## Version: @project-version@
 ## Notes: Marks player and up to 2 friends with raid icons
