@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.2.6r
+
+- Update interface number
+
 ## v1.2.5r
 
 - Update interface number

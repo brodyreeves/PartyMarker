@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90100
 ## Title: Party Marker
 ## Version: @project-version@
 ## Notes: Marks player and up to 2 friends with raid icons
