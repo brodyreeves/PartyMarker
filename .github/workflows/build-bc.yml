@@ -20,6 +20,6 @@ jobs:
         /home/runner/.luarocks/bin/luacheck . --no-color -q
 
     - name: Create Classic BC Package
-      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g bc
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g bcc
       env:
         CF_API_KEY: ${{ secrets.CF_API_KEY }}
