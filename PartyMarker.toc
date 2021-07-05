@@ -1,4 +1,5 @@
-## Interface: 11305
+## Interface-Clasic: 11307
+## Interface-BCC: 20501
 ## Title: Party Marker
 ## Version: @project-version@
 ## Notes: Marks player and up to 2 friends with raid icons

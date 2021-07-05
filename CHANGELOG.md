@@ -1,5 +1,10 @@
 # Party Marker
 
+## v1.2.6-classic
+
+- Update interface number
+- Support BC Classic
+
 ## v1.2.4c
 
 - Cleanup the Github-Curseforge automation files
