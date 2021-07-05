@@ -1,6 +1,6 @@
 # Party Marker
 
-## v1.2.6r
+## v1.2.6-retail
 
 - Update interface number
 
