@@ -3,7 +3,7 @@ name: Package bc to Curseforge
 on:
   push:
     tags:
-      - v**-bc
+      - v**-bcc
 
 jobs:
   build:

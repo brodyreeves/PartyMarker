@@ -1,6 +1,6 @@
 # Party Marker
 
-## v1.2.6-classic
+## v1.2.6-classic / v1.2.6-bcc
 
 - Update interface number
 - Support BC Classic
