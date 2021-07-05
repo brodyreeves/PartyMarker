@@ -1,9 +1,9 @@
-name: Package classic to Curseforge
+name: Package bc to Curseforge
 
 on:
   push:
     tags:
-      - v**-classic
+      - v**-bc
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
         luarocks install --local luacheck
         /home/runner/.luarocks/bin/luacheck . --no-color -q
 
-    - name: Create Classic Era Package
-      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g classic
+    - name: Create Classic BC Package
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g bc
       env:
         CF_API_KEY: ${{ secrets.CF_API_KEY }}
