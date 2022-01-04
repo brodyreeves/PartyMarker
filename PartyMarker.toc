@@ -1,4 +1,6 @@
 ## Interface: 90105
+## Interface-Classic: 11400
+## Interface-BCC: 20502
 ## Title: Party Marker
 ## Version: @project-version@
 ## Notes: Marks party members with raid icons

@@ -1,0 +1,25 @@
+name: Package BC
+
+on:
+  push:
+    tags:
+      - v**-bcc
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install and run Luacheck
+      run: |
+        sudo apt-get install luarocks
+        luarocks install --local luacheck
+        /home/runner/.luarocks/bin/luacheck . --no-color -q
+
+    - name: Create BCC Package
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g bcc
+      env:
+        CF_API_KEY: ${{ secrets.CF_API_KEY }}

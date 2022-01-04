@@ -18,5 +18,7 @@ manual-changelog:
 
 ignore:
     - Addon_Images
+    - .gitignore
+    - .luacheckrc
     - publish.sh
     - test.sh
