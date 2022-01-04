@@ -1,6 +1,6 @@
 # Party Marker
 
-## v1.3
+## v1.3.0
 
 - Update to support up to 5 party members
 
