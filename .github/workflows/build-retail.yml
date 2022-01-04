@@ -1,4 +1,4 @@
-name: Package retail to Curseforge
+name: Package Retail
 
 on:
   push:

@@ -19,7 +19,7 @@ fi
 ## Check tag can be published
 echo "Checking for local tag existence"
 
-result=$(git tag -l | grep -cx "$1-retail")+$(git tag -l | grep -cx "$1-classic")+$(git tag -l | grep -cx "$1-bcc")
+result=$(($(git tag -l | grep -cx "$1-retail")+$(git tag -l | grep -cx "$1-classic")+$(git tag -l | grep -cx "$1-bcc")))
 
 if [ $result -gt 0 ]; then
     echo "Tag already exists locally"
@@ -28,7 +28,7 @@ fi
 
 echo "Checking for remote tag existence"
 
-result=$(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1\"")+$(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1-classic\"")+$(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1-bcc\"")
+result=$(($(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1\"")+$(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1-classic\"")+$(curl -s "https://api.github.com/repos/brodyreeves/PartyMarker/tags" | grep -Po '"name":.*?[^\\]",' | grep -cP "\"$1-bcc\"")))
 
 if [ $result -gt 0 ]; then
     echo "Tag already exists on remote"
