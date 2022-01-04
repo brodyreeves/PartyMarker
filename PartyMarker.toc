@@ -1,4 +1,4 @@
-## Interface: 90100
+## Interface: 90105
 ## Title: Party Marker
 ## Version: @project-version@
 ## Notes: Marks party members with raid icons
