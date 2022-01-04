@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.3
+
+- Update to support up to 5 party members
+
 ## v1.2.6-retail
 
 - Update interface number

@@ -49,7 +49,7 @@ PartyMarker.options = {
         },
         showMsg = {
             name = "Display messages", width = "double",
-            desc = "Display addon messages in the chat frame, because the event used fires multiple times this can clutter the chat fram when you form a group; you may want to enable this if you're having problems, as a debugging tool",
+            desc = "Display addon messages in the chat frame, because the event used fires multiple times this can clutter the chat frame when you form a group; you may want to enable this if you're having problems, as a debugging tool",
             type = "toggle", order = 2,
             get = function(info) return PartyMarker.db.profile.showMsg end,
             set = function(info, val) PartyMarker.db.profile.showMsg = val end,
@@ -71,24 +71,24 @@ PartyMarker.options = {
             },
         },
         partner = {
-            name = "Partner",
+            name = "Partner 1",
             type = "group", inline = true, order = 4,
             args = {
                 partnerIcon = {
                     name = "Icon",
-                    desc = "Icon to assign to partner",
+                    desc = "Icon to assign to partner 1",
                     type = "select", order = 1, width = 0.8,
                     values = function() return PartyMarker.iconOptions end,
-                    get = function(info) return PartyMarker.db.profile.partnerIcon end,
-                    set = function(info, val) PartyMarker.db.profile.partnerIcon = val end,
+                    get = function(info) return PartyMarker.db.profile.partner1Icon end,
+                    set = function(info, val) PartyMarker.db.profile.partner1Icon = val end,
                     disabled = function() return not PartyMarker.db.profile.enabled end,
                 },
                 partnerBTag = {
                     name = "BattleTag",
-                    desc = "BattleTag of partner(e.g., 'Nickname#0001')",
+                    desc = "BattleTag of partner 1 (e.g., 'Nickname#0001')",
                     type = "input", order = 2,
-                    get = function(info) return PartyMarker.db.profile.partnerBTag end,
-                    set = function(info, val) PartyMarker.db.profile.partnerBTag = val end,
+                    get = function(info) return PartyMarker.db.profile.partner1BTag end,
+                    set = function(info, val) PartyMarker.db.profile.partner1BTag = val end,
                     disabled = function() return not PartyMarker.db.profile.enabled end,
                 },
             },
@@ -116,13 +116,59 @@ PartyMarker.options = {
                 },
             },
         },
+        partner3 = {
+            name = "Partner 3",
+            type = "group", inline = true, order = 6,
+            args = {
+                partner3Icon = {
+                    name = "Icon",
+                    desc = "Icon to assign to partner 3",
+                    type = "select", order = 1, width = 0.8,
+                    values = function() return PartyMarker.iconOptions end,
+                    get = function(info) return PartyMarker.db.profile.partner3Icon end,
+                    set = function(info, val) PartyMarker.db.profile.partner3Icon = val end,
+                    disabled = function() return not PartyMarker.db.profile.enabled end,
+                },
+                partner3BTag = {
+                    name = "BattleTag",
+                    desc = "BattleTag of partner 3 (e.g., 'Nickname#0003')",
+                    type = "input", order = 2,
+                    get = function(info) return PartyMarker.db.profile.partner3BTag end,
+                    set = function(info, val) PartyMarker.db.profile.partner3BTag = val end,
+                    disabled = function() return not PartyMarker.db.profile.enabled end,
+                },
+            },
+        },
+        partner4 = {
+            name = "Partner 4",
+            type = "group", inline = true, order = 7,
+            args = {
+                partner4Icon = {
+                    name = "Icon",
+                    desc = "Icon to assign to partner 4",
+                    type = "select", order = 1, width = 0.8,
+                    values = function() return PartyMarker.iconOptions end,
+                    get = function(info) return PartyMarker.db.profile.partner4Icon end,
+                    set = function(info, val) PartyMarker.db.profile.partner4Icon = val end,
+                    disabled = function() return not PartyMarker.db.profile.enabled end,
+                },
+                partner4BTag = {
+                    name = "BattleTag",
+                    desc = "BattleTag of partner 4 (e.g., 'Nickname#0004')",
+                    type = "input", order = 2,
+                    get = function(info) return PartyMarker.db.profile.partner4BTag end,
+                    set = function(info, val) PartyMarker.db.profile.partner4BTag = val end,
+                    disabled = function() return not PartyMarker.db.profile.enabled end,
+                },
+            },
+        },
         loot = {
             name = "Loot",
-            type = "group", inline = true, order = 6,
+            type = "group", inline = true, order = 10,
             args = {
                 lootMode = {
                     name = "Loot Mode",
-                    desc = "Loot mode to use in the group",
+                    desc = "Loot mode to use in the group, only applies if you are the leader",
                     type = "select", order = 1, width = 0.8,
                     values = function() return PartyMarker.lootModeOptions end,
                     get = function(info) return PartyMarker.db.profile.lootMode end,
@@ -131,7 +177,7 @@ PartyMarker.options = {
                 },
                 lootThresh = {
                     name = "Loot Threshold",
-                    desc = "Loot Threshold to use in the group",
+                    desc = "Loot Threshold to use in the group, only applies if you are the leader",
                     type = "select", order = 2, width = 0.8,
                     values = function() return PartyMarker.lootThreshOptions end,
                     get = function(info) return PartyMarker.db.profile.lootThresh end,
@@ -152,6 +198,10 @@ PartyMarker.defaults = {
         partnerBTag = "",
         partner2Icon = 0,
         partner2BTag = "",
+        partner3Icon = 0,
+        partner3BTag = "",
+        partner4Icon = 0,
+        partner4BTag = "",
         lootMode = 1, -- group loot
         lootThresh = 2, -- greens
     },
@@ -165,6 +215,16 @@ function PartyMarker:OnInitialize()
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PartyMarker", self.options)
     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PartyMarker", "PartyMarker")
+
+    -- TODO updating SV to new name, delete in future
+    if self.db.profile.partnerIcon and not self.db.profile.partner1Icon then -- update SVar
+        self.db.profile.partner1Icon = self.db.profile.partnerIcon
+        self.db.profile.partnerIcon = nil
+    end
+    if self.db.profile.partnerBTag and not self.db.profile.partner1BTag then -- update SVar
+        self.db.profile.partner1BTag = self.db.profile.partnerBTag
+        self.db.profile.partnerBTag = nil
+    end
 end
 
 function PartyMarker:OnEnable()
@@ -179,42 +239,43 @@ end
 
 -- Event Handlers
 function PartyMarker:GROUP_ROSTER_UPDATE()
-    if GetNumGroupMembers() == 2 or GetNumGroupMembers() == 3 and self.db.profile.partner2BTag ~= "" then -- group valid for marking
-        local partnerName = "1" -- default to illegal name
-        local partner2Name = "1"
+    local inParty = {}
 
-        -- get partner's toon name
-        local _, numOnline = BNGetNumFriends() -- number of online BNet friends
+    for i = 1, 4 do -- check if each partner is in the party
+        local bt = self.db.profile["partner" .. i .. "BTag"]
+        local icon = self.db.profile["partner" .. i .. "Icon"]
 
-        for id = 1, numOnline do -- for each friend
-            local accountInfo = C_BattleNet.GetFriendAccountInfo(id) -- read friend info
-            local battleTag = accountInfo and accountInfo.battleTag or "1"
-            local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
-            local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
+        if bt ~= "" then -- valid BTag is saved
+            local _, numOnline = BNGetNumFriends() -- number of online BNet friends
+            for id = 1, numOnline do -- for each online friend
+                local accountInfo = C_BattleNet.GetFriendAccountInfo(id) -- read friend info
+                local battleTag = accountInfo and accountInfo.battleTag or "1"
+                local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
+                local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
 
-            if battleTag == self.db.profile.partnerBTag and client == "WoW" then -- partner BNet account is playing WoW
-                partnerName = characterName -- found the character name for partner account
-            end
-
-            if battleTag == self.db.profile.partner2BTag and client == "WoW" then -- partner BNet account is playing WoW
-                partner2Name = characterName -- found the character name for partner account
+                if battleTag == bt and client == "WoW" and UnitInParty(characterName) then -- partner is in party
+                    table.insert(inParty, {n=characterName, i=icon}) -- store the character name and icon to give them
+                end
             end
         end
+    end
 
+    if GetNumGroupMembers() > 0 and GetNumGroupMembers() <= #inParty+1 then -- only execute when party is all partners
         -- marks
-        if UnitInParty(partnerName) and CanBeRaidTarget(partnerName) and CanBeRaidTarget("player") then -- partner is in party, player and partner can be marked
-            SetRaidTarget(partnerName, self.db.profile.partnerIcon)
-            SetRaidTarget("player", self.db.profile.playerIcon) -- set symbol on player
-            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partnerName .. colorG .. ">")
+        if CanBeRaidTarget("player") then -- mark player
+            SetRaidTarget("player", self.db.profile.playerIcon)
+            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. "player" .. colorG .. ">")
         else -- couldn't mark
-            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partnerName .. colorR .. ">")
+            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. "player" .. colorR .. ">")
         end
 
-        if UnitInParty(partner2Name) and CanBeRaidTarget(partner2Name) and CanBeRaidTarget("player") then -- partner is in party, player and partner can be marked
-            SetRaidTarget(partner2Name, self.db.profile.partner2Icon)
-            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. partner2Name .. colorG .. ">")
-        else -- couldn't mark
-            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. partner2Name .. colorR .. ">")
+        for _, p in ipairs(inParty) do -- mark each partner
+            if CanBeRaidTarget(p.n) then
+                SetRaidTarget(p.n, p.i)
+                PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. p.n .. colorG .. ">")
+            else -- couldn't mark
+                PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. p.n .. colorR .. ">")
+            end
         end
 
         -- loot
@@ -242,6 +303,8 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
         else -- not party leader
             PartyMarker:Send_Message(colorR .. "Failed to set loot method/threshold to <" .. colorW .. PartyMarker.lootModeOptions[self.db.profile.lootMode] .. ", " .. PartyMarker.lootThreshOptions[self.db.profile.lootThresh] .. colorR .. "> -- not party leader")
         end
+    else
+        PartyMarker:Send_Message(colorR .. "Group is not entirely partners")
     end
 end
 

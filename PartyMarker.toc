@@ -1,7 +1,7 @@
 ## Interface: 90100
 ## Title: Party Marker
 ## Version: @project-version@
-## Notes: Marks player and up to 2 friends with raid icons
+## Notes: Marks party members with raid icons
 ## Author: inSpired_TV
 ## X-Curse-Project-ID: 341686
 
