@@ -1,0 +1,35 @@
+name: Package All
+
+on:
+  push:
+    tags:
+      - v[1-9].[0-9]+.[0-9]+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install and run Luacheck
+      run: |
+        sudo apt-get install luarocks
+        luarocks install --local luacheck
+        /home/runner/.luarocks/bin/luacheck . --no-color -q
+
+    - name: Create Retail Package
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g retail
+      env:
+        CF_API_KEY: ${{ secrets.CF_API_KEY }}
+
+    - name: Create Classic Era Package
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g classic
+      env:
+        CF_API_KEY: ${{ secrets.CF_API_KEY }}
+
+    - name: Create BCC Package
+      run: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -g bcc
+      env:
+        CF_API_KEY: ${{ secrets.CF_API_KEY }}
