@@ -1,5 +1,7 @@
 #!/bin/bash
 
+addon=PartyMarker
+
 if [ $# -gt 1 ]; then
     echo "Usage: test [retail|classic|bcc]"
     exit
@@ -18,7 +20,10 @@ else
     exit
 fi
 
+# copy files with code changes
+dest="/c/Program Files (x86)/Games/Blizzard/World of Warcraft/$version/Interface/AddOns/$addon"
+
 # PartyMarker.lua
-cp -u -v "./PartyMarker.lua" "/c/Program Files (x86)/Games/Blizzard/World of Warcraft/$version/Interface/AddOns/PartyMarker"
+cp -u -v "./PartyMarker.lua" "$dest"
 
 echo "Done"

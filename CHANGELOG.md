@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.3.1
+
+- Localize functions to help with performance
+
 ## v1.3.0
 
 - Update to support up to 5 party members
