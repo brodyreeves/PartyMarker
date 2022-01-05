@@ -7,6 +7,7 @@ if [ $# -gt 1 ]; then
     exit
 fi
 
+# determine version to test in
 if [ $# -eq 0 ]; then
     version=_retail_
 elif [ $1 = "retail" ]; then

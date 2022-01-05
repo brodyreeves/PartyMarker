@@ -1,16 +1,14 @@
 #!/bin/bash
 
-# ! attempts to publish all versions at once have resulted in mixed up versions (-bcc for retail and classic)
-
-##  argument validation
+## argument validation
 # make sure correct number of arguments were passed
 if [ $# -eq 0 ] || [ $# -gt 1 ]; then
     echo "Usage: publish <tag>"
     exit
 fi
 
-# check first argument (tag name) is valid - v#.#.#-retail|classic|bcc
-if ! [[ "$1" =~ ^(v[1-9][0-9]{0,2})(\.[0-9]{1,3}){2,3}-(retail|classic|bcc)$ ]]; then
+# check first argument (tag name) is valid - v#.#.#
+if ! [[ "$1" =~ ^(v[1-9][0-9]{0,2})(\.[0-9]{1,3}){2,3}$ ]]; then
     echo "Invalid tag name"
     exit
 fi
