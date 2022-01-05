@@ -16,7 +16,7 @@ fi
 ## Check tag can be published
 echo "Checking for local tag existence"
 
-result=$(($(git tag -l | grep -cx "$1-retail")+$(git tag -l | grep -cx "$1-classic")+$(git tag -l | grep -cx "$1-bcc")))
+result=$(git tag -l | grep -cx "$1")
 
 if [ $result -gt 0 ]; then
     echo "Tag already exists locally"
