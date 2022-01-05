@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# ! attempts to publish all versions at once have resulted in mixed up versions (-bcc for retail and classic)
+
 ##  argument validation
 # make sure correct number of arguments were passed
 if [ $# -eq 0 ] || [ $# -gt 1 ]; then
