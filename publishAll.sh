@@ -36,16 +36,16 @@ if [ $result -gt 0 ]; then
     exit
 fi
 
-echo "Tagging for '$1'"
-
+echo "Publishing retail as '$retail'"
 git tag $retail
-git tag $classic
-git tag $bcc
-
-echo "Pushing tags for '$1'"
-
 git push origin $retail
+
+echo "Publishing classic as '$classic'"
+git tag $classic
 git push origin $classic
+
+echo "Publishing bcc as '$bcc'"
+git tag $bcc
 git push origin $bcc
 
 echo "Done"
