@@ -209,6 +209,20 @@ PartyMarker.defaults = {
 
 local colorG, colorR, colorY, colorW = "|cFF00FF00", "|cffff0000", "|cFFFFFF00", "|r" -- text color flags
 
+local BNGetNumFriends = BNGetNumFriends
+local CanBeRaidTarget = CanBeRaidTarget
+local GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
+local GetLootMethod = GetLootMethod
+local GetLootThreshold = GetLootThreshold
+local GetNumGroupMembers = GetNumGroupMembers
+local SetLootMethod = SetLootMethod
+local SetLootThreshold = SetLootThreshold
+local SetRaidTarget = SetRaidTarget
+local tinsert = table.insert
+local UnitInParty = UnitInParty
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitName = UnitName
+
 function PartyMarker:OnInitialize()
     -- Called when the addon is loaded
     self.db = LibStub("AceDB-3.0"):New("PartyMarkerDB", self.defaults, true)
@@ -248,13 +262,13 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
         if bt ~= "" then -- valid BTag is saved
             local _, numOnline = BNGetNumFriends() -- number of online BNet friends
             for id = 1, numOnline do -- for each online friend
-                local accountInfo = C_BattleNet.GetFriendAccountInfo(id) -- read friend info
+                local accountInfo = GetFriendAccountInfo(id) -- read friend info
                 local battleTag = accountInfo and accountInfo.battleTag or "1"
                 local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
                 local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
 
                 if battleTag == bt and client == "WoW" and UnitInParty(characterName) then -- partner is in party
-                    table.insert(inParty, {n=characterName, i=icon}) -- store the character name and icon to give them
+                    tinsert(inParty, {n=characterName, i=icon}) -- store the character name and icon to give them
                 end
             end
         end
