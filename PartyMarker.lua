@@ -230,7 +230,7 @@ function PartyMarker:OnInitialize()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PartyMarker", self.options)
     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PartyMarker", "PartyMarker")
 
-    -- TODO updating SV to new name, delete in future
+    -- TODO v1.3.0 updated SV to new name, delete in future
     if self.db.profile.partnerIcon and not self.db.profile.partner1Icon then -- update SVar
         self.db.profile.partner1Icon = self.db.profile.partnerIcon
         self.db.profile.partnerIcon = nil
@@ -253,42 +253,56 @@ end
 
 -- Event Handlers
 function PartyMarker:GROUP_ROSTER_UPDATE()
-    local inParty = {}
+    PartyMarker:Send_Message(colorY .. "Event triggered")
+    local groupSize = GetNumGroupMembers()
 
-    for i = 1, 4 do -- check if each partner is in the party
-        local bt = self.db.profile["partner" .. i .. "BTag"]
-        local icon = self.db.profile["partner" .. i .. "Icon"]
+    if groupSize < 2 or groupSize > 5 then -- group < 2 means party disbanded, group > 5 means impossible for party to all be partners
+        PartyMarker:Send_Message(colorR .. "Not marking: group size incompatible")
+        return
+    end
 
-        if bt ~= "" then -- valid BTag is saved
-            local _, numOnline = BNGetNumFriends() -- number of online BNet friends
-            for id = 1, numOnline do -- for each online friend
-                local accountInfo = GetFriendAccountInfo(id) -- read friend info
-                local battleTag = accountInfo and accountInfo.battleTag or "1"
-                local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
-                local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
+    local _, numOnline = BNGetNumFriends() -- number of online BNet friends
+    local partnersInWoW = {} -- character names of partners playing wow
+    local inParty = 1 -- player always in party
 
-                if battleTag == bt and client == "WoW" and UnitInParty(characterName) then -- partner is in party
-                    tinsert(inParty, {n=characterName, i=icon}) -- store the character name and icon to give them
-                end
+    for id = 1, numOnline do -- check each online friend's BTag (saved partner), client (playing WoW), characterName (in party)
+        local accountInfo = GetFriendAccountInfo(id) -- read friend info
+        local battleTag = accountInfo and accountInfo.battleTag or "1"
+        local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
+        local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
+
+        for i = 1, 4 do -- check against partners
+            -- BTag is saved and they are playing WoW with a valid character name
+            if battleTag == self.db.profile["partner" .. i .. "BTag"] and client == "WoW" and characterName ~= "1" then
+                PartyMarker:Send_Message(colorY .. "Friend " .. id .. "/Partner " .. i .. ") " .. colorW .. battleTag .. colorY .. " matched, playing " .. colorW .. characterName)
+                tinsert(partnersInWoW, {n=characterName, i=self.db.profile["partner" .. i .. "Icon"]}) -- store the character name and icon to give them
             end
         end
     end
 
-    if GetNumGroupMembers() > 0 and GetNumGroupMembers() <= #inParty+1 then -- only execute when party is all partners
+    -- NOTE: overhead is either checking partners in WoW (max 4) to count # in party or check through party (max 40) to count # of partners
+    for _, p in ipairs(partnersInWoW) do -- count number of partners in party
+        if UnitInParty(p.n) then
+            inParty = inParty + 1
+        end
+    end
+    PartyMarker:Send_Message(colorY .. "Found " .. colorW .. inParty .. colorY .. " partners in party of " .. groupSize)
+
+    if groupSize <= inParty then -- only execute when party is all partners
         -- marks
         if CanBeRaidTarget("player") then -- mark player
             SetRaidTarget("player", self.db.profile.playerIcon)
-            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. "player" .. colorG .. ">")
+            PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. "Player" .. colorG .. ">")
         else -- couldn't mark
-            PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. "player" .. colorR .. ">")
+            PartyMarker:Send_Message(colorR .. "Unable to mark <" .. colorW .. "Player" .. colorR .. ">")
         end
 
-        for _, p in ipairs(inParty) do -- mark each partner
+        for _, p in ipairs(partnersInWoW) do -- mark each partner
             if CanBeRaidTarget(p.n) then
                 SetRaidTarget(p.n, p.i)
                 PartyMarker:Send_Message(colorG .. "Marked <" .. colorW .. p.n .. colorG .. ">")
             else -- couldn't mark
-                PartyMarker:Send_Message(colorR .. "Failed to mark <" .. colorW .. p.n .. colorR .. ">")
+                PartyMarker:Send_Message(colorR .. "Unable to mark <" .. colorW .. p.n .. colorR .. ">")
             end
         end
 
@@ -300,8 +314,7 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
                 PartyMarker:Send_Message(colorG .. "Loot method already <" .. colorW .. PartyMarker.lootModeOptions[self.db.profile.lootMode] .. colorG .. ">")
             else
                 if self.db.profile.lootMode == 3 then -- master loot needs a player name too
-                    local playerName = UnitName("player")
-                    SetLootMethod(PartyMarker.lootModeOptions[self.db.profile.lootMode], playerName) -- set group loot method
+                    SetLootMethod(PartyMarker.lootModeOptions[self.db.profile.lootMode], UnitName("player")) -- set group loot method
                 else
                     SetLootMethod(PartyMarker.lootModeOptions[self.db.profile.lootMode]) -- set group loot method
                 end
@@ -315,10 +328,10 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
                 PartyMarker:Send_Message(colorG .. "Set loot threshold to <" .. colorW .. PartyMarker.lootThreshOptions[self.db.profile.lootThresh] .. colorG .. ">")
             end
         else -- not party leader
-            PartyMarker:Send_Message(colorR .. "Failed to set loot method/threshold to <" .. colorW .. PartyMarker.lootModeOptions[self.db.profile.lootMode] .. ", " .. PartyMarker.lootThreshOptions[self.db.profile.lootThresh] .. colorR .. "> -- not party leader")
+            PartyMarker:Send_Message(colorR .. "Not setting loot method/threshold: not party leader")
         end
     else
-        PartyMarker:Send_Message(colorR .. "Group is not entirely partners")
+        PartyMarker:Send_Message(colorR .. "Not marking: group is not partners only")
     end
 end
 

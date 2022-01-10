@@ -1,5 +1,10 @@
 # Party Marker
 
+## v1.3.2
+
+- Optimization/work around rate-limiting in some scenarios
+- Should help with Torghast zone-in showing a rate-limit notice
+
 ## v1.3.1
 
 - Localize functions to help with performance
