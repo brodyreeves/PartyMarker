@@ -25,6 +25,7 @@ globals = {
 
     -- Blizz API
     "BNGetNumFriends",
+    "BNGetFriendInfo",
     "C_BattleNet",
     "UnitInParty",
     "CanBeRaidTarget",
