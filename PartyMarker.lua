@@ -274,17 +274,18 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
     local inParty = 1 -- player always in party
 
     for id = 1, numOnline do -- check each online friend's BTag (saved partner), client (playing WoW), characterName (in party)
+        local battleTag, client, characterName
         --@retail@
         -- API call only exists in SL+
         local accountInfo = GetFriendAccountInfo(id) -- read friend info
-        local battleTag = accountInfo and accountInfo.battleTag or "1"
-        local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
-        local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
+        battleTag = accountInfo and accountInfo.battleTag or "1"
+        client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
+        characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
         --@end-retail@
 
         --@non-retail
         -- variable setup for pre-SL
-        local _, _, battleTag, _, characterName, _, client = BNGetFriendInfo(id)
+        _, _, battleTag, _, characterName, _, client = BNGetFriendInfo(id)
         --@end-non-retail
 
         for i = 1, 4 do -- check against partners

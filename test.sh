@@ -7,6 +7,10 @@ if [ $# -gt 1 ]; then
     exit
 fi
 
+echo "Luacheck:"
+../luacheck.exe PartyMarker.lua
+echo
+
 # determine version to test in
 if [ $# -eq 0 ]; then
     version=_retail_
@@ -25,6 +29,7 @@ fi
 dest="/c/Program Files (x86)/Games/Blizzard/World of Warcraft/$version/Interface/AddOns/$addon"
 
 # PartyMarker.lua
+echo "Copying:"
 cp -u -v "./PartyMarker.lua" "$dest"
 
 echo "Done"
