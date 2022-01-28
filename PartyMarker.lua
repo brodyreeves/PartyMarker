@@ -221,15 +221,16 @@ local tinsert = table.insert
 local UnitInParty = UnitInParty
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitName = UnitName
+
 --@retail@
 -- API call only exists in SL+
 local GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 --@end-retail@
 
---@non-retail@
+--[===[@non-retail@
 -- API needed to work pre-SL
 local BNGetFriendInfo = BNGetFriendInfo
---@end-non-retail@
+--@end-non-keyword@]===]
 
 function PartyMarker:OnInitialize()
     -- Called when the addon is loaded
@@ -275,6 +276,7 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
 
     for id = 1, numOnline do -- check each online friend's BTag (saved partner), client (playing WoW), characterName (in party)
         local battleTag, client, characterName
+
         --@retail@
         -- API call only exists in SL+
         local accountInfo = GetFriendAccountInfo(id) -- read friend info
@@ -283,10 +285,10 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
         characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
         --@end-retail@
 
-        --@non-retail
+        --[===[@non-retail@
         -- variable setup for pre-SL
         _, _, battleTag, _, characterName, _, client = BNGetFriendInfo(id)
-        --@end-non-retail
+        --@end-non-keyword@]===]
 
         for i = 1, 4 do -- check against partners
             -- BTag is saved and they are playing WoW with a valid character name

@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.3.4
+
+- fix keyword replacement issue
+
 ## v1.3.3
 
 - fix API issue for classic/bcc preventing addon from loading
