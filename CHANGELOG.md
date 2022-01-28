@@ -1,5 +1,9 @@
 # Party Marker
 
+## v1.3.3
+
+- fix API issue for classic/bcc preventing addon from loading
+
 ## v1.3.2
 
 - Optimization/work around rate-limiting in some scenarios

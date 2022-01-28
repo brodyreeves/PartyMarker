@@ -211,7 +211,6 @@ local colorG, colorR, colorY, colorW = "|cFF00FF00", "|cffff0000", "|cFFFFFF00",
 
 local BNGetNumFriends = BNGetNumFriends
 local CanBeRaidTarget = CanBeRaidTarget
-local GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
 local GetLootMethod = GetLootMethod
 local GetLootThreshold = GetLootThreshold
 local GetNumGroupMembers = GetNumGroupMembers
@@ -222,6 +221,15 @@ local tinsert = table.insert
 local UnitInParty = UnitInParty
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitName = UnitName
+--@retail@
+-- API call only exists in SL+
+local GetFriendAccountInfo = C_BattleNet.GetFriendAccountInfo
+--@end-retail@
+
+--@non-retail@
+-- API needed to work pre-SL
+local BNGetFriendInfo = BNGetFriendInfo
+--@end-non-retail@
 
 function PartyMarker:OnInitialize()
     -- Called when the addon is loaded
@@ -266,10 +274,18 @@ function PartyMarker:GROUP_ROSTER_UPDATE()
     local inParty = 1 -- player always in party
 
     for id = 1, numOnline do -- check each online friend's BTag (saved partner), client (playing WoW), characterName (in party)
+        --@retail@
+        -- API call only exists in SL+
         local accountInfo = GetFriendAccountInfo(id) -- read friend info
         local battleTag = accountInfo and accountInfo.battleTag or "1"
         local client = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.clientProgram or "1"
         local characterName = accountInfo and accountInfo.gameAccountInfo and accountInfo.gameAccountInfo.characterName or "1"
+        --@end-retail@
+
+        --@non-retail
+        -- variable setup for pre-SL
+        local _, _, battleTag, _, characterName, _, client = BNGetFriendInfo(id)
+        --@end-non-retail
 
         for i = 1, 4 do -- check against partners
             -- BTag is saved and they are playing WoW with a valid character name
