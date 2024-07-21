@@ -1,6 +1,6 @@
 <div align="center">
 
-## PartyMarker
+## [Abandoned] PartyMarker
 
 [![Package All](https://github.com/brodyreeves/PartyMarker/actions/workflows/build-all.yml/badge.svg)](https://github.com/brodyreeves/PartyMarker/actions/workflows/build-all.yml)
 
